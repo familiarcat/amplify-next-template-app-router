@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "sandbox": "npx ampx sandbox --profile AmplifyUser --debug",
+    "sandbox-deploy": "npx ampx sandbox --profile AmplifyUser --once",
     "verify-images": "node scripts/verify-images.js"
   },
   "dependencies": {
@@ -16,11 +18,13 @@
     "@heroicons/react": "^2.0.18",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
+    "@types/ini": "^4.1.1",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
     "autoprefixer": "^10.4.16",
     "aws-amplify": "^6.6.6",
     "classnames": "^2.3.2",
+    "ini": "^5.0.0",
     "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18",
