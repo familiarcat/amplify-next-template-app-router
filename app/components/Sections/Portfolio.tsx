@@ -10,7 +10,6 @@ import {portfolioItems, SectionId} from '@/app/data/data';
 import type {PortfolioItem} from '@/app/data/dataDef';
 import useDetectOutsideClick from '@/app/hooks/useDetectOutsideClick';
 import Section from '@/app/components/Layout/Section';
-import { isMobile } from '@/config';
 
 const Portfolio: FC = memo(() => {
   const {isMobile} = useDevice();
@@ -43,6 +42,7 @@ Portfolio.displayName = 'Portfolio';
 export default Portfolio;
 
 const ItemOverlay: FC<{item: PortfolioItem}> = memo(({item: {url, title, description}}) => {
+  const {isMobile} = useDevice();
   const [mobile, setMobile] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -52,7 +52,7 @@ const ItemOverlay: FC<{item: PortfolioItem}> = memo(({item: {url, title, descrip
     if (isMobile) {
       setMobile(true);
     }
-  }, []);
+  }, [isMobile]); // Add isMobile to dependency array
   useDetectOutsideClick(linkRef, () => setShowOverlay(false));
 
   const handleItemClick = useCallback(

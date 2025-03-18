@@ -1,16 +1,19 @@
-"use client"
+'use client';
+
 import {ArrowTopRightOnSquareIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Image from 'next/image';
 import React,{FC, memo, MouseEvent,useCallback, useEffect, useRef, useState} from 'react';
 
-import {isMobile} from '@/app/config';
+import {useDevice} from '@/app/hooks/useDevice';
 import {portfolioItems, SectionId} from '@/app/data/data';
 import type {PortfolioItem} from '@/app/data/dataDef';
 import useDetectOutsideClick from '@/app/hooks/useDetectOutsideClick';
 import Section from '@/app/components/Layout/Section';
 
 const Portfolio: FC = memo(() => {
+  const {isMobile} = useDevice();
+  
   return (
     <Section className="bg-neutral-800" sectionId={SectionId.Portfolio}>
       <div className="flex flex-col gap-y-8">
@@ -40,33 +43,27 @@ Portfolio.displayName = 'Portfolio';
 export default Portfolio;
 
 const ItemOverlay: FC<{item: PortfolioItem}> = memo(({item: {url, title, description}}) => {
-  const [mobile, setMobile] = useState(false);
+  const {isMobile} = useDevice();
   const [showOverlay, setShowOverlay] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
-    // Avoid hydration styling errors by setting mobile in useEffect
-    if (isMobile) {
-      setMobile(true);
-    }
-  }, []);
   useDetectOutsideClick(linkRef, () => setShowOverlay(false));
 
   const handleItemClick = useCallback(
     (event: MouseEvent<HTMLElement>) => {
-      if (mobile && !showOverlay) {
+      if (isMobile && !showOverlay) {
         event.preventDefault();
         setShowOverlay(!showOverlay);
       }
     },
-    [mobile, showOverlay],
+    [isMobile, showOverlay],
   );
 
   return (
     <a
       className={classNames(
         'absolute inset-0 h-full w-full  bg-gray-900 transition-all duration-300',
-        {'opacity-0 hover:opacity-80': !mobile},
+        {'opacity-0 hover:opacity-80': !isMobile},
         showOverlay ? 'opacity-80' : 'opacity-0',
       )}
       href={url}
