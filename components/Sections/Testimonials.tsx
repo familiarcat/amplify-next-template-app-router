@@ -3,13 +3,13 @@
 import classNames from 'classnames';
 import {FC, memo, UIEventHandler, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {isApple, isMobile} from '../../../config';
-import {SectionId, testimonial} from '../../data/data';
-import {Testimonial} from '../../data/dataDef';
-import useInterval from '../../hooks/useInterval';
-import useWindow from '../../hooks/useWindow';
-import QuoteIcon from '../Icon/QuoteIcon';
-import Section from '../Layout/Section';
+import {isApple, isMobile} from '@/app/config';
+import {SectionId, testimonial} from '@/app/data/data';
+import type {Testimonial} from '@/app/data/dataDef';
+import useInterval from '@/app/hooks/useInterval';
+import useWindow from '@/app/hooks/useWindow';
+import QuoteIcon from '@/app/components/Icon/QuoteIcon';
+import Section from '@/app/components/Layout/Section';
 
 const Testimonials: FC = memo(() => {
   const [activeIndex, setActiveIndex] = useState<number>(0);

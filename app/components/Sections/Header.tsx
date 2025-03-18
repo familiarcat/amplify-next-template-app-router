@@ -5,7 +5,8 @@ import {Bars3BottomRightIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Link from 'next/link';
 import {FC, Fragment, memo, useCallback, useMemo, useState} from 'react';
-import {data, SectionId} from '@/data/data';
+
+import {SectionId} from '@/app/data/data';
 import {useNavObserver} from '@/app/hooks/useNavObserver';
 
 export const headerID = 'headerNav';
@@ -21,7 +22,7 @@ const Header: FC = memo(() => {
     section && setCurrentSection(section);
   }, []);
 
-  useNavObserver(navSections.map(section => `#${section}`).join(','), intersectionHandler);
+  useNavObserver(navSections.map(section => `#${section}`).join(','));
 
   return (
     <>

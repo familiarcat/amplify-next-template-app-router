@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import React,{FC, memo, MouseEvent,useCallback, useEffect, useRef, useState} from 'react';
 
-import {isMobile} from '../../../config';
-import {portfolioItems, SectionId} from '../../data/data';
-import {PortfolioItem} from '../../data/dataDef';
-import useDetectOutsideClick from '../../hooks/useDetectOutsideClick';
-import Section from '../Layout/Section';
+import {isMobile} from '@/app/config';
+import {portfolioItems, SectionId} from '@/app/data/data';
+import type {PortfolioItem} from '@/app/data/dataDef';
+import useDetectOutsideClick from '@/app/hooks/useDetectOutsideClick';
+import Section from '@/app/components/Layout/Section';
 
 const Portfolio: FC = memo(() => {
   return (

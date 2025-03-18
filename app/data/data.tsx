@@ -13,23 +13,20 @@ import InstagramIcon from '../components/Icon/InstagramIcon';
 import LinkedInIcon from '../components/Icon/LinkedInIcon';
 import StackOverflowIcon from '../components/Icon/StackOverflowIcon';
 import TwitterIcon from '../components/Icon/TwitterIcon';
-
-// Update image imports to use string literals instead of direct imports
-const heroImage = '/images/header-background.webp';
-const porfolioImage1 = '/images/portfolio/portfolio-1.jpg';
-const porfolioImage2 = '/images/portfolio/portfolio-2.jpg';
-const porfolioImage3 = '/images/portfolio/portfolio-3.jpg';
-const porfolioImage4 = '/images/portfolio/portfolio-4.jpg';
-const porfolioImage5 = '/images/portfolio/portfolio-5.jpg';
-const porfolioImage6 = '/images/portfolio/portfolio-6.jpg';
-const porfolioImage7 = '/images/portfolio/portfolio-7.jpg';
-const porfolioImage8 = '/images/portfolio/portfolio-8.jpg';
-const porfolioImage9 = '/images/portfolio/portfolio-9.jpg';
-const porfolioImage10 = '/images/portfolio/portfolio-10.jpg';
-const porfolioImage11 = '/images/portfolio/portfolio-11.jpg';
-const profilepic = '/images/profilepic.jpg';
-const testimonialImage = '/images/testimonial.webp';
-
+import heroImage from '../images/header-background.webp';
+import porfolioImage1 from '../images/portfolio/portfolio-1.jpg';
+import porfolioImage2 from '../images/portfolio/portfolio-2.jpg';
+import porfolioImage3 from '../images/portfolio/portfolio-3.jpg';
+import porfolioImage4 from '../images/portfolio/portfolio-4.jpg';
+import porfolioImage5 from '../images/portfolio/portfolio-5.jpg';
+import porfolioImage6 from '../images/portfolio/portfolio-6.jpg';
+import porfolioImage7 from '../images/portfolio/portfolio-7.jpg';
+import porfolioImage8 from '../images/portfolio/portfolio-8.jpg';
+import porfolioImage9 from '../images/portfolio/portfolio-9.jpg';
+import porfolioImage10 from '../images/portfolio/portfolio-10.jpg';
+import porfolioImage11 from '../images/portfolio/portfolio-11.jpg';
+import profilepic from '../images/profilepic.jpg';
+import testimonialImage from '../images/testimonial.webp';
 import {
   About,
   ContactSection,
@@ -42,12 +39,11 @@ import {
   TestimonialSection,
   TimelineItem,
 } from './dataDef';
-import React from 'react';
 
 /**
  * Page meta data
  */
-const homePageMeta: HomepageMeta = {
+export const homePageMeta: HomepageMeta = {
   title: 'React Resume Template',
   description: "Example site built with Brady Georgen's dynamic resume content",
 };
@@ -55,16 +51,18 @@ const homePageMeta: HomepageMeta = {
 /**
  * Section definition
  */
-export enum SectionId {
-  Hero = 'hero',
-  About = 'about',
-  Contact = 'contact',
-  Portfolio = 'portfolio',
-  Resume = 'resume',
-  Skills = 'skills',
-  Stats = 'stats',
-  Testimonials = 'testimonials',
-}
+export const SectionId = {
+  Hero: 'hero',
+  About: 'about',
+  Contact: 'contact',
+  Portfolio: 'portfolio',
+  Resume: 'resume',
+  Skills: 'skills',
+  Stats: 'stats',
+  Testimonials: 'testimonials',
+} as const;
+
+export type SectionId = (typeof SectionId)[keyof typeof SectionId];
 
 /**
  * Base JSON resume content
@@ -257,7 +255,7 @@ const jsonResume = {
 /**
  * Hero section
  */
-const hero: Hero = {
+export const heroData: Hero = {
   imageSrc: heroImage, // Use heroImage here instead of jsonResume.summary.headshot
   name: jsonResume.contactInformation.name,
   description: (
@@ -288,14 +286,16 @@ const hero: Hero = {
 /**
  * About section
  */
-const about = {
+export const aboutData: About = {
+  // Here we use the headshot as the profile image – you could choose a different image if available
   profileImageSrc: profilepic,
-  description: `Brady Georgen uniquely merges a background in digital arts with deep technical expertise to lead transformative projects in modern software development.`,
+  description: jsonResume.summary.gptResponse,
   aboutItems: [
-    {label: 'Name', text: 'Brady Georgen', Icon: MapIcon},
-    {label: 'Email', text: 'brady@example.com', Icon: CalendarIcon},
-    {label: 'Phone', text: '3145800608', Icon: FlagIcon},
-    {label: 'Website', text: 'https://bradygeorgen.example.com', Icon: SparklesIcon},
+    {label: 'Name', text: jsonResume.contactInformation.name, Icon: MapIcon},
+    {label: 'Email', text: jsonResume.contactInformation.email, Icon: CalendarIcon},
+    {label: 'Phone', text: jsonResume.contactInformation.phone, Icon: FlagIcon},
+    // You can add location or other details if available
+    {label: 'Website', text: jsonResume.summary.url, Icon: SparklesIcon},
   ],
 };
 
@@ -305,7 +305,7 @@ const about = {
  * Since the JSON resume lists skills as a flat array we group them here under a single group.
  * (You could also split them into multiple categories if your data allowed.)
  */
-const resumeSkillGroups: SkillGroup[] = [
+export const skills: SkillGroup[] = [
   {
     name: 'Technical Skills',
     skills: jsonResume.skills.map((skill) => ({
@@ -320,7 +320,7 @@ const resumeSkillGroups: SkillGroup[] = [
  *
  * Since portfolio data is not in the JSON resume, we use a placeholder set from the original config.
  */
-export const resumePortfolioItems: PortfolioItem[] = [
+export const portfolioItems: PortfolioItem[] = [
   {
     title: 'Project title 1',
     description: 'Give a short description of your project here.',
@@ -394,7 +394,7 @@ export const resumePortfolioItems: PortfolioItem[] = [
  *
  * Map each school and its degrees into timeline items.
  */
-const educationTimeline: TimelineItem[] = jsonResume.education.schools.flatMap((school) =>
+export const education: TimelineItem[] = jsonResume.education.schools.flatMap((school) =>
   school.degrees.map((degree) => ({
     date: `${degree.startYear} - ${degree.endYear}`,
     location: school.name,
@@ -410,7 +410,7 @@ const educationTimeline: TimelineItem[] = jsonResume.education.schools.flatMap((
  * Each company in the JSON becomes a timeline item.
  * (Nested engagements under a company could be further mapped if needed.)
  */
-const experienceTimelineItems: TimelineItem[] = jsonResume.experience.companies.map((company) => ({
+export const experience: TimelineItem[] = jsonResume.experience.companies.map((company) => ({
   date: `${company.startDate} - ${company.endDate}`,
   location: company.name,
   title: company.role,
@@ -477,234 +477,10 @@ export const contact: ContactSection = {
 /**
  * Social items
  */
-const socialMediaLinks: Social[] = [
+export const socialLinks: Social[] = [
   {label: 'Github', Icon: GithubIcon, href: 'https://github.com/bradygeorgen'},
   {label: 'Stack Overflow', Icon: StackOverflowIcon, href: 'https://stackoverflow.com'},
   {label: 'LinkedIn', Icon: LinkedInIcon, href: 'https://www.linkedin.com/in/bradygeorgen/'},
   {label: 'Instagram', Icon: InstagramIcon, href: 'https://www.instagram.com/bradygeorgen/'},
   {label: 'Twitter', Icon: TwitterIcon, href: 'https://twitter.com/bradygeorgen'},
 ];
-
-// Model Interfaces
-interface ResumeModel {
-  title: string;
-  summaryId: string;
-  contactInformationId: string;
-  educationId: string;
-  experienceId: string;
-}
-
-interface SummaryModel {
-  goals: string;
-  persona: string;
-  url: string;
-  headshot: string;
-  gptResponse: string;
-  resume: string;
-}
-
-interface ContactInformationModel {
-  name: string;
-  email: string;
-  phone: string;
-  resume: string;
-  references?: ReferenceModel[];
-}
-
-interface ReferenceModel {
-  name: string;
-  phone: string;
-  email: string;
-  contactInformationId: string;
-}
-
-interface EducationModel {
-  summary: string;
-  resume: string;
-  schools?: SchoolModel[];
-}
-
-interface SchoolModel {
-  name: string;
-  educationId: string;
-  degrees?: DegreeModel[];
-}
-
-interface DegreeModel {
-  major: string;
-  startYear: string;
-  endYear: string;
-  schoolId: string;
-}
-
-interface ExperienceModel {
-  title: string;
-  text: string;
-  gptResponse: string;
-  resume: string;
-  companies?: CompanyModel[];
-}
-
-interface CompanyModel {
-  name: string;
-  role: string;
-  startDate: string;
-  endDate: string;
-  title: string;
-  gptResponse: string;
-  experienceId: string;
-  engagements?: EngagementModel[];
-  accomplishments?: AccomplishmentModel[];
-}
-
-interface EngagementModel {
-  client: string;
-  startDate: string;
-  endDate: string;
-  gptResponse: string;
-  companyId: string;
-}
-
-interface AccomplishmentModel {
-  title: string;
-  description: string;
-  link: string;
-  companyId: string;
-  engagementId?: string;
-}
-
-interface SkillModel {
-  title: string;
-  link: string;
-  resumeId: string;
-  companyId?: string;
-  accomplishmentId?: string;
-}
-
-// Model Implementations
-const modelDefaults = {
-  Resume: {
-    title: '',
-    summaryId: '',
-    contactInformationId: '',
-    educationId: '',
-    experienceId: ''
-  } as ResumeModel,
-
-  Summary: {
-    goals: '',
-    persona: '',
-    url: '',
-    headshot: '',
-    gptResponse: '',
-    resume: ''
-  } as SummaryModel,
-
-  ContactInformation: {
-    name: '',
-    email: '',
-    phone: '',
-    resume: '',
-    references: []
-  } as ContactInformationModel,
-
-  Reference: {
-    name: '',
-    phone: '',
-    email: '',
-    contactInformationId: ''
-  } as ReferenceModel,
-
-  Education: {
-    summary: '',
-    resume: '',
-    schools: []
-  } as EducationModel,
-
-  School: {
-    name: '',
-    educationId: '',
-    degrees: []
-  } as SchoolModel,
-
-  Degree: {
-    major: '',
-    startYear: '',
-    endYear: '',
-    schoolId: ''
-  } as DegreeModel,
-
-  Experience: {
-    title: '',
-    text: '',
-    gptResponse: '',
-    resume: '',
-    companies: []
-  } as ExperienceModel,
-
-  Company: {
-    name: '',
-    role: '',
-    startDate: '',
-    endDate: '',
-    title: '',
-    gptResponse: '',
-    experienceId: '',
-    engagements: [],
-    accomplishments: []
-  } as CompanyModel,
-
-  Engagement: {
-    client: '',
-    startDate: '',
-    endDate: '',
-    gptResponse: '',
-    companyId: ''
-  } as EngagementModel,
-
-  Accomplishment: {
-    title: '',
-    description: '',
-    link: '',
-    companyId: '',
-    engagementId: ''
-  } as AccomplishmentModel,
-
-  Skill: {
-    title: '',
-    link: '',
-    resumeId: '',
-    companyId: '',
-    accomplishmentId: ''
-  } as SkillModel
-};
-
-// Export type definitions
-export type {
-  ResumeModel,
-  SummaryModel,
-  ContactInformationModel,
-  ReferenceModel,
-  EducationModel,
-  SchoolModel,
-  DegreeModel,
-  ExperienceModel,
-  CompanyModel,
-  EngagementModel,
-  AccomplishmentModel,
-  SkillModel
-};
-
-export { 
-  about as aboutData, 
-  resumePortfolioItems as portfolioItems, 
-  resumeSkillGroups, 
-  educationTimeline, 
-  experienceTimelineItems, 
-  contact as contactData, 
-  socialMediaLinks, 
-  testimonial as testimonialData, 
-  hero, 
-  homePageMeta, 
-  modelDefaults 
-};

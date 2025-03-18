@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import {FC, memo} from 'react';
 
-import {data, SectionId} from '@/data/data';
+import {heroData} from '@/app/data/data';
 
 const Hero: FC = memo(() => {
   return (
