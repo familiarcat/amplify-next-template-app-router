@@ -3,7 +3,7 @@
 import classNames from 'classnames';
 import {FC, memo, UIEventHandler, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {isApple, isMobile} from '@/app/config';
+import {useDevice} from '@/app/hooks/useDevice';
 import {SectionId, testimonial} from '@/app/data/data';
 import type {Testimonial} from '@/app/data/dataDef';
 import useInterval from '@/app/hooks/useInterval';
@@ -15,6 +15,7 @@ const Testimonials: FC = memo(() => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [scrollValue, setScrollValue] = useState(0);
   const [parallaxEnabled, setParallaxEnabled] = useState(false);
+  const {isMobile, isApple} = useDevice();
 
   const itemWidth = useRef(0);
   const scrollContainer = useRef<HTMLDivElement>(null);
@@ -31,7 +32,7 @@ const Testimonials: FC = memo(() => {
   // Mobile iOS doesn't allow background-fixed elements
   useEffect(() => {
     setParallaxEnabled(!(isMobile && isApple));
-  }, []);
+  }, [isMobile, isApple]);
 
   useEffect(() => {
     itemWidth.current = scrollContainer.current ? scrollContainer.current.offsetWidth : 0;

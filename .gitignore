@@ -35,7 +35,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# amplify
-.amplify
-amplify_outputs*
-amplifyconfiguration*
+# Amplify
+.amplify/
+amplify_outputs*.json
+amplifyconfiguration*.json
+
+# Keep these files if they exist
+!amplify/backend/
+!amplify/data/
+!amplify/auth/

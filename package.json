@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "sandbox-delete": "npx ampx sandbox delete",
     "sandbox": "npx ampx sandbox --profile AmplifyUser --debug",
     "sandbox-deploy": "npx ampx sandbox --profile AmplifyUser --once",
     "verify-images": "node scripts/verify-images.js"

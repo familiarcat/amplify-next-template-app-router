@@ -1,16 +1,19 @@
-"use client"
+'use client';
+
 import {ArrowTopRightOnSquareIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Image from 'next/image';
-import React,{FC, memo, MouseEvent,useCallback, useEffect, useRef, useState} from 'react';
+import React, {FC, memo, MouseEvent, useCallback, useEffect, useRef, useState} from 'react';
 
-import {isMobile} from '@/app/config';
+import {useDevice} from '@/app/hooks/useDevice';
 import {portfolioItems, SectionId} from '@/app/data/data';
 import type {PortfolioItem} from '@/app/data/dataDef';
 import useDetectOutsideClick from '@/app/hooks/useDetectOutsideClick';
 import Section from '@/app/components/Layout/Section';
+import { isMobile } from '@/config';
 
 const Portfolio: FC = memo(() => {
+  const {isMobile} = useDevice();
   return (
     <Section className="bg-neutral-800" sectionId={SectionId.Portfolio}>
       <div className="flex flex-col gap-y-8">
