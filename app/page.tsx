@@ -69,16 +69,39 @@ export default function App() {
       const content = window.prompt("Todo content");
       if (!content) return;
 
-      // Create the todo
+      // Create optimistic todo
+      const optimisticTodo = {
+        id: `temp-${Date.now()}`, // temporary ID
+        content: content,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        _version: 1,
+        _lastChangedAt: Date.now(),
+        _deleted: false,
+      };
+
+      // Add optimistic todo to the list
+      setTodos(currentTodos => [...currentTodos, optimisticTodo]);
+
+      // Create the actual todo
       const newTodo = await client.models.Todo.create({
         content: content,
       });
-      
-      // No need for optimistic update since we have the actual todo with ID
-      // The subscription will automatically update the UI
+
+      // Replace optimistic todo with real todo
+      setTodos(currentTodos => 
+        currentTodos.map(todo => 
+          todo.id === optimisticTodo.id ? newTodo : todo
+        )
+      );
     } catch (err) {
       console.error("Error creating todo:", err);
       setError("Failed to create todo. Please ensure the backend is deployed.");
+      
+      // Remove optimistic todo on error
+      setTodos(currentTodos => 
+        currentTodos.filter(todo => !todo.id.startsWith('temp-'))
+      );
     }
   }
 
