@@ -3,7 +3,7 @@ backend:
   phases:
     build:
       commands:
-        - npm ci
+        - yarn install
         - npx amplify sandbox --profile AmplifyUser --once
 frontend:
   phases:
@@ -11,10 +11,10 @@ frontend:
       commands:
         - nvm install 18.19.0
         - nvm use 18.19.0
-        - npm ci
+        - yarn install
     build:
       commands:
-        - npm run build
+        - yarn build
   artifacts:
     baseDirectory: .next
     files:
@@ -23,4 +23,4 @@ frontend:
     paths:
       - .next/cache/**/*
       - node_modules/**/*
-      - .npm/**/*
+      - .yarn/cache/**/*
