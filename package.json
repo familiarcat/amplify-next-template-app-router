@@ -14,7 +14,11 @@
     "verify-images": "node scripts/verify-images.js"
   },
   "dependencies": {
+    "@aws-amplify/core": "^6.0.0",
     "@aws-amplify/ui-react": "^6.5.5",
+    "@aws-sdk/client-cloudformation": "^3.624.0",
+    "@aws-sdk/client-s3": "^3.624.0",
+    "@aws-sdk/types": "^3.609.0",
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@tailwindcss/forms": "^0.5.7",
@@ -31,7 +35,8 @@
     "react-dom": "^18",
     "react-icons": "^5.5.0",
     "sass": "^1.69.5",
-    "tailwindcss": "^3.3.0"
+    "tailwindcss": "^3.3.0",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^1.5.1",

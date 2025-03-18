@@ -5,10 +5,17 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../amplify/data/resource";
 import "./../app/app.css";
 import { Amplify } from "aws-amplify";
-import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
 
-Amplify.configure(outputs);
+// Attempt to import the outputs, but provide fallback
+let amplifyConfig = {};
+try {
+  amplifyConfig = require("@/amplify_outputs.json");
+} catch (e) {
+  console.warn("amplify_outputs.json not found. Using empty config.");
+}
+
+Amplify.configure(amplifyConfig);
 
 const client = generateClient<Schema>();
 

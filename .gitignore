@@ -37,10 +37,7 @@ next-env.d.ts
 
 # Amplify
 .amplify/
-amplify_outputs*.json
-amplifyconfiguration*.json
-
-# Keep these files if they exist
-!amplify/backend/
+# Don't ignore the outputs file anymore
+!amplify_outputs.json
 !amplify/data/
 !amplify/auth/
