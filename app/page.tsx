@@ -13,8 +13,8 @@ import type {Schema} from '@/amplify/data/resource';
 Amplify.configure({
   API: {
     GraphQL: {
-      endpoint: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/graphql',
-      region: process.env.NEXT_PUBLIC_REGION || 'us-east-1',
+      endpoint: process.env.NEXT_PUBLIC_API_URL as string,
+      region: process.env.NEXT_PUBLIC_AWS_REGION,
       defaultAuthMode: 'apiKey',
     }
   }

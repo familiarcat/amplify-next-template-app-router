@@ -43,7 +43,6 @@ async function checkCredentials() {
 
 // Initialize DynamoDB client with explicit credentials
 const initializeDynamoDBClient = () => {
-  // Use AWS SDK's default credential provider chain instead of explicit credentials
   const config = {
     region: process.env.AWS_REGION || 'us-east-2'
   };
