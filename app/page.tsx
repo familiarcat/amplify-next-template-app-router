@@ -1,157 +1,78 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../amplify/data/resource";
-import "./../app/app.css";
-import { Amplify } from "aws-amplify";
-import "@aws-amplify/ui-react/styles.css";
+import './../app/app.css';
+import '@aws-amplify/ui-react/styles.css';
 
-// Attempt to import the outputs, but provide fallback
-let amplifyConfig = {};
-try {
-  amplifyConfig = require("@/amplify_outputs.json");
-} catch (e) {
-  console.warn("amplify_outputs.json not found. Using empty config.");
-}
+import {generateClient} from 'aws-amplify/data';
+import {useState} from 'react';
 
-Amplify.configure(amplifyConfig);
+import type {Schema} from '../amplify/data/resource';
 
+type TodoType = Schema['Todo']['type'];
 const client = generateClient<Schema>();
 
 export default function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [todos, setTodos] = useState<TodoType[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let subscription: { unsubscribe: () => void } | null = null;
-
-    async function listTodos() {
-      try {
-        setIsLoading(true);
-        // First, fetch existing todos
-        const existingTodos = await client.models.Todo.list();
-        setTodos(existingTodos.data);
-        setIsLoading(false);
-
-        // Then set up real-time subscription
-        subscription = client.models.Todo.observeQuery().subscribe({
-          next: ({ items }) => {
-            setTodos(items);
-            setError(null);
-          },
-          error: (err) => {
-            console.error("Error in todo subscription:", err);
-            setError("Unable to load todos. Please ensure the backend is deployed.");
-            setIsLoading(false);
-          },
-        });
-      } catch (err) {
-        console.error("Error setting up subscription:", err);
-        setError("Failed to connect to the backend. Please ensure the backend is deployed.");
-        setIsLoading(false);
-      }
-    }
-
-    listTodos();
-
-    return () => {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-    };
-  }, []);
 
   async function createTodo() {
     try {
       setError(null);
-      const content = window.prompt("Todo content");
+      const content = window.prompt('Todo content');
       if (!content) return;
 
-      // Create optimistic todo
-      const optimisticTodo = {
-        id: `temp-${Date.now()}`, // temporary ID
-        content: content,
+      const optimisticTodo: TodoType = {
+        id: `temp-${Date.now()}`,
+        content,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        _version: 1,
-        _lastChangedAt: Date.now(),
-        _deleted: false,
       };
 
-      // Add optimistic todo to the list
       setTodos(currentTodos => [...currentTodos, optimisticTodo]);
 
-      // Create the actual todo
-      const newTodo = await client.models.Todo.create({
-        content: content,
-      });
+      const result = await client.models.Todo.create({content});
 
-      // Replace optimistic todo with real todo
+      if (!result?.data) {
+        throw new Error('Failed to create todo');
+      }
+
+      const newTodo: TodoType = {
+        id: result.data.id,
+        content: result.data.content,
+        createdAt: result.data.createdAt,
+        updatedAt: result.data.updatedAt,
+      };
+
       setTodos(currentTodos => 
         currentTodos.map(todo => 
           todo.id === optimisticTodo.id ? newTodo : todo
         )
       );
-    } catch (err) {
-      console.error("Error creating todo:", err);
-      setError("Failed to create todo. Please ensure the backend is deployed.");
+    } catch (error) {
+      console.error('Error creating todo:', error);
+      setError('Failed to create todo. Please ensure the backend is deployed.');
       
-      // Remove optimistic todo on error
       setTodos(currentTodos => 
-        currentTodos.filter(todo => !todo.id.startsWith('temp-'))
+        currentTodos.filter(todo => todo.id?.startsWith('temp-') !== true)
       );
     }
   }
 
   return (
-    <main className="p-4">
-      <h1 className="text-2xl font-bold mb-4">My todos</h1>
-      <button 
-        onClick={createTodo}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
-      >
-        + new
-      </button>
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          <p>{error}</p>
-          <p className="text-sm mt-2">
-            Try running: <code className="bg-gray-100 px-2 py-1">npx amplify sandbox</code>
-          </p>
-        </div>
-      )}
-
-      {isLoading ? (
-        <div className="text-gray-600">Loading todos...</div>
-      ) : (
-        <ul className="space-y-2">
-          {todos.map((todo) => (
-            <li 
-              key={todo.id}
-              className="bg-gray-100 p-3 rounded"
-            >
-              {todo.content}
-            </li>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={createTodo}
+          type="button">
+          Create Todo
+        </button>
+        {error && <p className="text-red-500">{error}</p>}
+        <ul>
+          {todos.map(todo => (
+            <li key={todo.id}>{todo.content}</li>
           ))}
         </ul>
-      )}
-
-      <div className="mt-8 text-gray-600">
-        🚀 To get started:
-        <ol className="list-decimal ml-6 mt-2">
-          <li>Run <code className="bg-gray-100 px-2 py-1">npx amplify sandbox</code></li>
-          <li>Wait for the backend to deploy</li>
-          <li>Refresh this page</li>
-        </ol>
-        <a 
-          href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/"
-          className="text-blue-500 hover:underline block mt-4"
-        >
-          Review next steps in the tutorial →
-        </a>
       </div>
     </main>
   );

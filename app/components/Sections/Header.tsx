@@ -18,11 +18,10 @@ const Header: FC = memo(() => {
     [],
   );
 
-  const intersectionHandler = useCallback((section: SectionId | null) => {
-    section && setCurrentSection(section);
-  }, []);
-
-  useNavObserver(navSections.map(section => `#${section}`).join(','));
+  useNavObserver(
+    navSections.map(section => `#${section}`).join(','),
+    setCurrentSection
+  );
 
   return (
     <>

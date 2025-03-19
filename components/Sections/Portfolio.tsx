@@ -3,22 +3,20 @@
 import {ArrowTopRightOnSquareIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Image from 'next/image';
-import React,{FC, memo, MouseEvent,useCallback, useEffect, useRef, useState} from 'react';
+import React, {FC, memo, MouseEvent, useCallback, useRef, useState} from 'react';
 
-import {useDevice} from '@/app/hooks/useDevice';
+import Section from '@/app/components/Layout/Section';
 import {portfolioItems, SectionId} from '@/app/data/data';
 import type {PortfolioItem} from '@/app/data/dataDef';
 import useDetectOutsideClick from '@/app/hooks/useDetectOutsideClick';
-import Section from '@/app/components/Layout/Section';
+import {useDevice} from '@/app/hooks/useDevice';
 
 const Portfolio: FC = memo(() => {
-  const {isMobile} = useDevice();
-  
   return (
     <Section className="bg-neutral-800" sectionId={SectionId.Portfolio}>
       <div className="flex flex-col gap-y-8">
         <h2 className="self-center text-xl font-bold text-white">Check out some of my work</h2>
-        <div className=" w-full columns-2 md:columns-3 lg:columns-4">
+        <div className="w-full columns-2 md:columns-3 lg:columns-4">
           {portfolioItems.map((item, index) => {
             const {title, image} = item;
             return (
@@ -62,21 +60,22 @@ const ItemOverlay: FC<{item: PortfolioItem}> = memo(({item: {url, title, descrip
   return (
     <a
       className={classNames(
-        'absolute inset-0 h-full w-full  bg-gray-900 transition-all duration-300',
-        {'opacity-0 hover:opacity-80': !isMobile},
-        showOverlay ? 'opacity-80' : 'opacity-0',
+        'absolute inset-0 h-full w-full bg-gray-900 transition-all duration-300',
+        {'opacity-0 hover:opacity-80': !showOverlay, 'opacity-80': showOverlay},
       )}
       href={url}
       onClick={handleItemClick}
       ref={linkRef}
       target="_blank">
       <div className="relative h-full w-full p-4">
-        <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto overscroll-contain">
-          <h2 className="text-center font-bold text-white opacity-100">{title}</h2>
-          <p className="text-xs text-white opacity-100 sm:text-sm">{description}</p>
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
+          <h2 className="text-center font-bold text-white">{title}</h2>
+          <p className="text-xs text-white">{description}</p>
+          <ArrowTopRightOnSquareIcon className="absolute bottom-1 right-1 h-4 w-4 text-white" />
         </div>
-        <ArrowTopRightOnSquareIcon className="absolute bottom-1 right-1 h-4 w-4 shrink-0 text-white sm:bottom-2 sm:right-2" />
       </div>
     </a>
   );
 });
+
+ItemOverlay.displayName = 'ItemOverlay';
