@@ -3,10 +3,24 @@
 import './../app/app.css';
 import '@aws-amplify/ui-react/styles.css';
 
+import {Amplify} from 'aws-amplify';
 import {generateClient} from 'aws-amplify/data';
 import {useState} from 'react';
 
-import type {Schema} from '../amplify/data/resource';
+import type {Schema} from '@/amplify/data/resource';
+
+// Configure Amplify
+Amplify.configure({
+  API: {
+    GraphQL: {
+      endpoint: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/graphql',
+      region: process.env.NEXT_PUBLIC_REGION || 'us-east-1',
+      defaultAuthMode: 'apiKey',
+    }
+  }
+}, {
+  ssr: true
+});
 
 type TodoType = Schema['Todo']['type'];
 const client = generateClient<Schema>();
