@@ -3,10 +3,11 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm install 18.19.0
         - nvm use 18.19.0
-        - yarn install
     build:
       commands:
+        - yarn install
         - yarn build
   artifacts:
     baseDirectory: .next
@@ -15,4 +16,3 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
-      - .next/cache/**/*
